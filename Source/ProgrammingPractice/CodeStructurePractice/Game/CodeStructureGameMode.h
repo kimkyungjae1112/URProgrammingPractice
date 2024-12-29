@@ -14,4 +14,7 @@ class PROGRAMMINGPRACTICE_API ACodeStructureGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	ACodeStructureGameMode();
+	
 };
