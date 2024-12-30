@@ -17,4 +17,9 @@ class PROGRAMMINGPRACTICE_API ACodeStructureGameMode : public AGameModeBase
 public:
 	ACodeStructureGameMode();
 	
+protected:
+	virtual void BeginPlay() override;
+
+private:
+	void ChangePlayer();
 };

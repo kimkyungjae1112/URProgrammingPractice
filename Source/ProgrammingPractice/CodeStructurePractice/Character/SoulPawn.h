@@ -32,7 +32,6 @@ public:
 private:
 	APlayerController* GetMyController();
 
-
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> SphereComp;
 

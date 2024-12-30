@@ -19,6 +19,7 @@ ACSCharacterSelectSoul::ACSCharacterSelectSoul()
 	bUseControllerRotationRoll = false;
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("Soul"));
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ACSCharacterSelectSoul::OnOverlap);
 	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
 	StaticMeshComp = CREATE_COMP(UStaticMeshComponent, Static Mesh Component);
@@ -79,6 +80,14 @@ void ACSCharacterSelectSoul::SetupPlayerInputComponent(UInputComponent* PlayerIn
 APlayerController* ACSCharacterSelectSoul::GetMyController()
 {
 	return Cast<APlayerController>(GetController());
+}
+
+void ACSCharacterSelectSoul::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor != this)
+	{
+
+	}
 }
 
 void ACSCharacterSelectSoul::Move(const FInputActionValue& Value)
