@@ -18,6 +18,6 @@ public:
 	ACSCharacterWraith();
 
 protected:
-	virtual UClass* SelectedBySoul();
+	virtual UClass* GetCharacterClass();
 	
 };

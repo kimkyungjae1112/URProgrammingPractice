@@ -27,8 +27,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	void RegisterInputSystem();
 
 private:
 	APlayerController* GetMyController();

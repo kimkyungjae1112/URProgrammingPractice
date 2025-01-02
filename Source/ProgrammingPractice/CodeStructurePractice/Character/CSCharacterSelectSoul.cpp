@@ -77,6 +77,15 @@ void ACSCharacterSelectSoul::SetupPlayerInputComponent(UInputComponent* PlayerIn
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACSCharacterSelectSoul::Look);
 }
 
+void ACSCharacterSelectSoul::RegisterInputSystem()
+{
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetMyController()->GetLocalPlayer()))
+	{
+		UE_LOG(LogTemp, Display, TEXT("Change Input!!"));
+		Subsystem->AddMappingContext(IMC, 0);
+	}
+}
+
 APlayerController* ACSCharacterSelectSoul::GetMyController()
 {
 	return Cast<APlayerController>(GetController());
@@ -86,7 +95,6 @@ void ACSCharacterSelectSoul::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor != this)
 	{
-
 	}
 }
 

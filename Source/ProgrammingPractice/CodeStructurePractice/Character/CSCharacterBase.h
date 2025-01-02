@@ -12,6 +12,9 @@ DECLARE_DELEGATE(FOnSignChangePlayer)
 
 class USpringArmComponent;
 class UCameraComponent;
+class UInputMappingContext;
+class UInputAction;
+class APlayerController;
 
 UCLASS()
 class PROGRAMMINGPRACTICE_API ACSCharacterBase : public ACharacter
@@ -31,12 +34,12 @@ public:
 
 public:
 	FOnSignChangePlayer OnSignChangePlayer;
-	virtual UClass* SelectedBySoul();
+	virtual UClass* GetCharacterClass();
+	void RegisterInputSystem();
 
-
+/* Utility */
 protected:
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<class UBoxComponent> BoxComp;
+	APlayerController* GetMyController();
 
 /* Camera */
 protected:
@@ -50,8 +53,24 @@ private:
 	UFUNCTION()
 	void SelectedBySoulOnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+/* Input */
+private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
+	void QuickSoul();
 
+	UPROPERTY(VisibleAnywhere, Category = "Input")
+	TObjectPtr<UInputMappingContext> IMC_Default;
 
+	UPROPERTY(VisibleAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> MoveAction;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> LookAction;
+
+	UPROPERTY(VisibleAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> JumpAction;
+
+	UPROPERTY(VisibleAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> QuickSoulAction;
 };

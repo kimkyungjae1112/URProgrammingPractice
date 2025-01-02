@@ -12,9 +12,9 @@ ACSCharacterWraith::ACSCharacterWraith()
 	}
 }
 
-UClass* ACSCharacterWraith::SelectedBySoul()
+UClass* ACSCharacterWraith::GetCharacterClass()
 {
-	Super::SelectedBySoul();
+	Super::GetCharacterClass();
 
 	UE_LOG(LogTemp, Display, TEXT("Child :: 닿았음"));
 	return StaticClass();

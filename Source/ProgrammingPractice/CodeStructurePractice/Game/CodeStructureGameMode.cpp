@@ -3,6 +3,7 @@
 
 #include "CodeStructurePractice/Game/CodeStructureGameMode.h"
 #include "CodeStructurePractice/Character/CSCharacterBase.h"
+#include "CodeStructurePractice/Character/CSCharacterSelectSoul.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -21,6 +22,33 @@ ACodeStructureGameMode::ACodeStructureGameMode()
 	}
 }
 
+void ACodeStructureGameMode::QuickSoulInPlayer()
+{
+	ACSCharacterSelectSoul* Soul = CastChecked<ACSCharacterSelectSoul>(UGameplayStatics::GetActorOfClass(GetWorld(), ACSCharacterSelectSoul::StaticClass()));
+	if (Soul)
+	{
+		TSubclassOf<APawn> NewPawnClass = Soul->StaticClass();
+		if (!NewPawnClass)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Pawn 클래스가 유효하지 않음"));
+			return;
+		}
+
+		APlayerController* Controller = Cast<APlayerController>(UGameplayStatics::GetActorOfClass(GetWorld(), PlayerControllerClass));
+		if (!Controller)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Controller 클래스가 유효하지 않음"));
+			return;
+		}
+
+		DefaultPawnClass = Soul->StaticClass();
+		Controller->Possess(Soul);
+
+		Soul->RegisterInputSystem();
+	}
+
+}
+
 void ACodeStructureGameMode::BeginPlay()
 {
 	Super::BeginPlay();
@@ -37,26 +65,22 @@ void ACodeStructureGameMode::ChangePlayer()
     ACSCharacterBase* Player = CastChecked<ACSCharacterBase>(UGameplayStatics::GetActorOfClass(GetWorld(), ACSCharacterBase::StaticClass()));
     if (Player)
     {
-        UE_LOG(LogTemp, Display, TEXT("실행됨?"));
-
-        TSubclassOf<APawn> NewPawnClass = Player->SelectedBySoul();
+        TSubclassOf<APawn> NewPawnClass = Player->GetCharacterClass();
         if (!NewPawnClass)
         {
-            UE_LOG(LogTemp, Error, TEXT("선택된 Pawn 클래스가 유효하지 않습니다!"));
+            UE_LOG(LogTemp, Error, TEXT("Pawn 클래스가 유효하지 않음"));
             return;
         }
 
+		APlayerController* Controller = Cast<APlayerController>(UGameplayStatics::GetActorOfClass(GetWorld(), PlayerControllerClass));
+		if (!Controller)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Controller 클래스가 유효하지 않음"));
+			return;
+		}
         DefaultPawnClass = NewPawnClass; 
+		Controller->Possess(Player);
 
-        AController* PlayerController = Player->GetController();
-        if (PlayerController)
-        {
-            Player->Destroy();
-            RestartPlayer(PlayerController); 
-        }
-        else
-        {
-            UE_LOG(LogTemp, Error, TEXT("플레이어 컨트롤러를 찾을 수 없습니다!"));
-        }
+		Player->RegisterInputSystem();
     }
 }

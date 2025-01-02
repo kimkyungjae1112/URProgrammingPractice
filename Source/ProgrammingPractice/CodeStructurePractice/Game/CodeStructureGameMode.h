@@ -17,6 +17,8 @@ class PROGRAMMINGPRACTICE_API ACodeStructureGameMode : public AGameModeBase
 public:
 	ACodeStructureGameMode();
 	
+	void QuickSoulInPlayer();
+
 protected:
 	virtual void BeginPlay() override;
 
