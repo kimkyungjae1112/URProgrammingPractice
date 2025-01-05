@@ -16,6 +16,12 @@ UClass* ACSCharacterWraith::GetCharacterClass()
 {
 	Super::GetCharacterClass();
 
-	UE_LOG(LogTemp, Display, TEXT("Child :: 닿았음"));
 	return StaticClass();
+}
+
+void ACSCharacterWraith::DefaultAttack()
+{
+	Super::DefaultAttack();
+
+	UE_LOG(LogTemp, Display, TEXT("Wraith Default Attack"));
 }

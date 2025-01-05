@@ -23,5 +23,5 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	void ChangePlayer();
+	void ChangePlayer(UClass* PlayerClass);
 };

@@ -3,6 +3,7 @@
 
 #include "CodeStructurePractice/Character/CSCharacterBase.h"
 #include "CodeStructurePractice/Game/CodeStructureGameMode.h"
+#include "CodeStructurePractice/Component/CSDefaultAttackComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
@@ -31,10 +32,12 @@ ACSCharacterBase::ACSCharacterBase()
 
 	SpringArmComp = CREATE_COMP(USpringArmComponent, SpringArm Component);
 	SpringArmComp->SetupAttachment(GetMesh());
-	SpringArmComp->bUsePawnControlRotation = false;
+	SpringArmComp->bUsePawnControlRotation = true;
 
 	CameraComp = CREATE_COMP(UCameraComponent, Camera Component);
 	CameraComp->SetupAttachment(SpringArmComp);
+
+	DefaultAttackComp = CREATE_COMP(UCSDefaultAttackComponent, Default Attack Comp);
 
 	static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMC_Ref(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Input/Character/IMC_Character.IMC_Character'"));
 	if (IMC_Ref.Object)
@@ -61,8 +64,11 @@ ACSCharacterBase::ACSCharacterBase()
 	{
 		QuickSoulAction = QuickSoulActionRef.Object;
 	}
-
-	
+	static ConstructorHelpers::FObjectFinder<UInputAction> DefaultAttackActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Character/IMC_CharacterDefaultAttack.IMC_CharacterDefaultAttack'"));
+	if (DefaultAttackActionRef.Object)
+	{
+		DefaultAttackAction = DefaultAttackActionRef.Object;
+	}
 }
 
 void ACSCharacterBase::BeginPlay()
@@ -88,6 +94,7 @@ void ACSCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 	EnhancedInputComponent->BindAction(QuickSoulAction, ETriggerEvent::Started, this, &ACSCharacterBase::QuickSoul);
+	EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Started, this, &ACSCharacterBase::DefaultAttack);
 }
 
 UClass* ACSCharacterBase::GetCharacterClass()
@@ -99,21 +106,27 @@ void ACSCharacterBase::RegisterInputSystem()
 {
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetMyController()->GetLocalPlayer()))
 	{
+		Subsystem->ClearAllMappings();
 		Subsystem->AddMappingContext(IMC_Default, 0);
 	}
 }
 
 void ACSCharacterBase::SelectedBySoulOnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor != this)
+	if (OtherActor != this && OtherActor)
 	{
-		OnSignChangePlayer.ExecuteIfBound();
+		OnSignChangePlayer.ExecuteIfBound(GetCharacterClass());
 	}
 }
 
 APlayerController* ACSCharacterBase::GetMyController()
 {
 	return CastChecked<APlayerController>(GetController());
+}
+
+void ACSCharacterBase::DefaultAttack()
+{
+	UE_LOG(LogTemp, Display, TEXT("Parent Default Attack"));
 }
 
 void ACSCharacterBase::Move(const FInputActionValue& Value)

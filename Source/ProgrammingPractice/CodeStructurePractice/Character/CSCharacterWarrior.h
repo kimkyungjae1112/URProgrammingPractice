@@ -4,25 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "CodeStructurePractice/Character/CSCharacterBase.h"
-#include "CSCharacterWraith.generated.h"
+#include "CSCharacterWarrior.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROGRAMMINGPRACTICE_API ACSCharacterWraith : public ACSCharacterBase
+class PROGRAMMINGPRACTICE_API ACSCharacterWarrior : public ACSCharacterBase
 {
 	GENERATED_BODY()
-
+	
 public:
-	ACSCharacterWraith();
+	ACSCharacterWarrior();
 
 /* Utility */
 protected:
 	virtual UClass* GetCharacterClass();
-
+	
 /* Input */
 protected:
 	virtual void DefaultAttack() override;
-	
 };

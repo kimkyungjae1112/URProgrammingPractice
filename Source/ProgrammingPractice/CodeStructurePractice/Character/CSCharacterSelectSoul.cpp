@@ -55,6 +55,16 @@ ACSCharacterSelectSoul::ACSCharacterSelectSoul()
 	{
 		LookAction = LookActionRef.Object;
 	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> UpActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Soul/IMC_SoulUp.IMC_SoulUp'"));
+	if (UpActionRef.Object)
+	{
+		UpAction = UpActionRef.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UInputAction> DownActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Soul/IMC_SoulDown.IMC_SoulDown'"));
+	if (DownActionRef.Object)
+	{
+		DownAction = DownActionRef.Object;
+	}
 }
 
 void ACSCharacterSelectSoul::BeginPlay()
@@ -75,13 +85,15 @@ void ACSCharacterSelectSoul::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACSCharacterSelectSoul::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACSCharacterSelectSoul::Look);
+	EnhancedInputComponent->BindAction(UpAction, ETriggerEvent::Triggered, this, &ACSCharacterSelectSoul::MoveUp);
+	EnhancedInputComponent->BindAction(DownAction, ETriggerEvent::Triggered, this, &ACSCharacterSelectSoul::MoveDown);
 }
 
 void ACSCharacterSelectSoul::RegisterInputSystem()
 {
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetMyController()->GetLocalPlayer()))
 	{
-		UE_LOG(LogTemp, Display, TEXT("Change Input!!"));
+		Subsystem->ClearAllMappings();
 		Subsystem->AddMappingContext(IMC, 0);
 	}
 }
@@ -95,6 +107,10 @@ void ACSCharacterSelectSoul::OnOverlap(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor != this)
 	{
+		if (OtherActor)
+		{
+			UE_LOG(LogTemp, Display, TEXT("OtherActor Name : %s"), *OtherActor->GetActorNameOrLabel());
+		}
 	}
 }
 
@@ -118,5 +134,19 @@ void ACSCharacterSelectSoul::Look(const FInputActionValue& Value)
 
 	AddControllerPitchInput(InputValue.X * 0.5f);
 	AddControllerYawInput(-InputValue.Y * 0.5f);
+}
+
+void ACSCharacterSelectSoul::MoveUp(const FInputActionValue& Value)
+{
+	float MoveSpeed = Value.Get<float>();
+
+	AddMovementInput(FVector::UpVector, MoveSpeed);
+}
+
+void ACSCharacterSelectSoul::MoveDown(const FInputActionValue& Value)
+{
+	float MoveSpeed = Value.Get<float>();
+
+	AddMovementInput(FVector::DownVector, MoveSpeed);
 }
 

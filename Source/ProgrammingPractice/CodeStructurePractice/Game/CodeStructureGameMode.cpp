@@ -3,6 +3,8 @@
 
 #include "CodeStructurePractice/Game/CodeStructureGameMode.h"
 #include "CodeStructurePractice/Character/CSCharacterBase.h"
+#include "CodeStructurePractice/Character/CSCharacterWraith.h"
+#include "CodeStructurePractice/Character/CSCharacterWarrior.h"
 #include "CodeStructurePractice/Character/CSCharacterSelectSoul.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
@@ -41,6 +43,7 @@ void ACodeStructureGameMode::QuickSoulInPlayer()
 			return;
 		}
 
+		Controller->UnPossess();
 		DefaultPawnClass = Soul->StaticClass();
 		Controller->Possess(Soul);
 
@@ -53,19 +56,25 @@ void ACodeStructureGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ACSCharacterBase* Player = CastChecked<ACSCharacterBase>(UGameplayStatics::GetActorOfClass(GetWorld(), ACSCharacterBase::StaticClass()));
-	if (Player)
+	TArray<AActor*> CharacterArray;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACSCharacterBase::StaticClass(), CharacterArray);
+	for (const auto& Character : CharacterArray)
 	{
-		Player->OnSignChangePlayer.BindUObject(this, &ACodeStructureGameMode::ChangePlayer);
+		ACSCharacterBase* Player = CastChecked<ACSCharacterBase>(Character);
+		if (Player)
+		{
+			Player->OnSignChangePlayer.BindUObject(this, &ACodeStructureGameMode::ChangePlayer);
+		}
 	}
 }
 
-void ACodeStructureGameMode::ChangePlayer()
+void ACodeStructureGameMode::ChangePlayer(UClass* PlayerClass)
 {
-    ACSCharacterBase* Player = CastChecked<ACSCharacterBase>(UGameplayStatics::GetActorOfClass(GetWorld(), ACSCharacterBase::StaticClass()));
+    ACSCharacterBase* Player = CastChecked<ACSCharacterBase>(UGameplayStatics::GetActorOfClass(GetWorld(), PlayerClass));
     if (Player)
     {
-        TSubclassOf<APawn> NewPawnClass = Player->GetCharacterClass();
+		UE_LOG(LogTemp, Display, TEXT("Player Name : %s"), *Player->GetActorNameOrLabel());
+		TSubclassOf<APawn> NewPawnClass = PlayerClass;
         if (!NewPawnClass)
         {
             UE_LOG(LogTemp, Error, TEXT("Pawn 클래스가 유효하지 않음"));
@@ -78,6 +87,7 @@ void ACodeStructureGameMode::ChangePlayer()
 			UE_LOG(LogTemp, Error, TEXT("Controller 클래스가 유효하지 않음"));
 			return;
 		}
+
         DefaultPawnClass = NewPawnClass; 
 		Controller->Possess(Player);
 

@@ -8,13 +8,21 @@
 #include "CSCharacterBase.generated.h"
 
 #define CREATE_COMP(KlassName, CompName) CreateDefaultSubobject<KlassName>(TEXT(#CompName))
-DECLARE_DELEGATE(FOnSignChangePlayer)
+DECLARE_DELEGATE_OneParam(FOnSignChangePlayer, UClass* /* Static Class */)
 
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 class APlayerController;
+class UCSDefaultAttackComponent;
+
+UENUM()
+enum class EPlayerClass : uint8
+{
+	EWarrior,
+	EWraith
+};
 
 UCLASS()
 class PROGRAMMINGPRACTICE_API ACSCharacterBase : public ACharacter
@@ -34,12 +42,18 @@ public:
 
 public:
 	FOnSignChangePlayer OnSignChangePlayer;
-	virtual UClass* GetCharacterClass();
 	void RegisterInputSystem();
 
 /* Utility */
 protected:
+	virtual UClass* GetCharacterClass();
+
 	APlayerController* GetMyController();
+
+/* Component */
+protected:
+	UPROPERTY(VisibleAnywhere, Category = "Component")
+	TObjectPtr<UCSDefaultAttackComponent> DefaultAttackComp;
 
 /* Camera */
 protected:
@@ -54,6 +68,9 @@ private:
 	void SelectedBySoulOnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 /* Input */
+protected:
+	virtual void DefaultAttack();
+
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
@@ -73,4 +90,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> QuickSoulAction;
+
+	UPROPERTY(VisibleAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> DefaultAttackAction;
 };
