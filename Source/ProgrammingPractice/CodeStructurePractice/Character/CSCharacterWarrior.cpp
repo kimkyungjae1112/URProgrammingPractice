@@ -2,6 +2,8 @@
 
 
 #include "CodeStructurePractice/Character/CSCharacterWarrior.h"
+#include "CodeStructurePractice/Component/CSDefaultAttackComponent.h"
+#include "CodeStructurePractice/Interface/WarriorDefaultAttackInterface.h"
 
 ACSCharacterWarrior::ACSCharacterWarrior()
 {
@@ -19,9 +21,20 @@ UClass* ACSCharacterWarrior::GetCharacterClass()
 	return StaticClass();
 }
 
+EPlayerClass ACSCharacterWarrior::GetPlayerClassType()
+{
+	return EPlayerClass::EWarrior;
+}
+
 void ACSCharacterWarrior::DefaultAttack()
 {
 	Super::DefaultAttack();
 
 	UE_LOG(LogTemp, Display, TEXT("Warrior Default Attack"));
+
+	IWarriorDefaultAttackInterface* DefaultAttackInterface = Cast<IWarriorDefaultAttackInterface>(DefaultAttackComp);
+	if (DefaultAttackInterface)
+	{
+		DefaultAttackInterface->WarriorDefaultAttack();
+	}
 }

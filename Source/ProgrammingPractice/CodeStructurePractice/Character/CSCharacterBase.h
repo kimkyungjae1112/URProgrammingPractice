@@ -47,6 +47,7 @@ public:
 /* Utility */
 protected:
 	virtual UClass* GetCharacterClass();
+	virtual EPlayerClass GetPlayerClassType();
 
 	APlayerController* GetMyController();
 

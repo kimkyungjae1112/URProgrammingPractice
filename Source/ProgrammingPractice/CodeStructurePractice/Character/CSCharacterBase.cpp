@@ -102,6 +102,11 @@ UClass* ACSCharacterBase::GetCharacterClass()
 	return StaticClass();
 }
 
+EPlayerClass ACSCharacterBase::GetPlayerClassType()
+{
+	return EPlayerClass();
+}
+
 void ACSCharacterBase::RegisterInputSystem()
 {
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetMyController()->GetLocalPlayer()))
@@ -116,6 +121,16 @@ void ACSCharacterBase::SelectedBySoulOnOverlap(UPrimitiveComponent* OverlappedCo
 	if (OtherActor != this && OtherActor)
 	{
 		OnSignChangePlayer.ExecuteIfBound(GetCharacterClass());
+		if (GetPlayerClassType() == EPlayerClass::EWarrior)
+		{
+			DefaultAttackComp->LoadAssetAsync(EAssetType::Warrior);
+			UE_LOG(LogTemp, Display, TEXT("Warrior 부딪힘"));
+		}
+		else if (GetPlayerClassType() == EPlayerClass::EWraith)
+		{
+			DefaultAttackComp->LoadAssetAsync(EAssetType::Wraith);
+			UE_LOG(LogTemp, Display, TEXT("Wraith 부딪힘"));
+		}
 	}
 }
 

@@ -20,7 +20,8 @@ public:
 /* Utility */
 protected:
 	virtual UClass* GetCharacterClass();
-	
+	virtual EPlayerClass GetPlayerClassType();
+
 /* Input */
 protected:
 	virtual void DefaultAttack() override;

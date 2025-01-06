@@ -4,11 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "CodeStructurePractice/Interface/WraithDefaultAttackInterface.h"
+#include "CodeStructurePractice/Interface/WarriorDefaultAttackInterface.h"
 #include "CSDefaultAttackComponent.generated.h"
 
+class UAnimInstance;
+class ACharacter;
+class UWarriorAnimMontageDataAsset;
+class UWraithAnimMontageDataAsset;
+
+UENUM()
+enum class EAssetType : uint8
+{
+	Warrior,
+	Wraith
+};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class PROGRAMMINGPRACTICE_API UCSDefaultAttackComponent : public UActorComponent
+class PROGRAMMINGPRACTICE_API UCSDefaultAttackComponent : public UActorComponent, 
+	 public IWarriorDefaultAttackInterface, public IWraithDefaultAttackInterface
 {
 	GENERATED_BODY()
 
@@ -21,5 +35,32 @@ protected:
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+/* Interface Implement */
+public:
+	virtual void WarriorDefaultAttack() override;
+	virtual void WraithDefaultAttack() override;
+
+/* Asyncload */
+public:
+	void LoadAssetAsync(const EAssetType& AssetType);
+
+/* Utility */
+private:
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<ACharacter> Player;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UAnimInstance> Anim;
+
+/* Asset Data */
+private:
+	void SetWarriorAnimMontageDataAsset(UWarriorAnimMontageDataAsset* InWarriorAnimMontageDataAsset);
+	void SetWraithAnimMontageDataAsset(UWraithAnimMontageDataAsset* InWraithAnimMontageDataAsset);
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UWarriorAnimMontageDataAsset> WarriorAnimMontageDataAsset;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UWraithAnimMontageDataAsset> WraithAnimMontageDataAsset;
+
 };
