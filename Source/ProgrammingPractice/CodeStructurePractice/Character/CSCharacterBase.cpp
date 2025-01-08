@@ -93,7 +93,7 @@ void ACSCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACSCharacterBase::Look);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-	EnhancedInputComponent->BindAction(QuickSoulAction, ETriggerEvent::Started, this, &ACSCharacterBase::QuickSoul);
+	EnhancedInputComponent->BindAction(QuickSoulAction, ETriggerEvent::Started, this, &ACSCharacterBase::QuickToSoul);
 	EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Started, this, &ACSCharacterBase::DefaultAttack);
 }
 
@@ -166,12 +166,21 @@ void ACSCharacterBase::Look(const FInputActionValue& Value)
 	AddControllerYawInput(-InputValue.Y * 0.5f);
 }
 
-void ACSCharacterBase::QuickSoul()
+void ACSCharacterBase::QuickToSoul()
 {
+	if (GetPlayerClassType() == EPlayerClass::EWarrior)
+	{
+		DefaultAttackComp->UnLoadAsset(EAssetType::Warrior);
+	}
+	else if (GetPlayerClassType() == EPlayerClass::EWraith)
+	{
+		DefaultAttackComp->UnLoadAsset(EAssetType::Wraith);
+	}
+
 	ACodeStructureGameMode* GameMode = Cast<ACodeStructureGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	if (GameMode)
 	{
-		GameMode->QuickSoulInPlayer();
+		GameMode->QuickToSoulInPlayer();
 	}
 }
 

@@ -24,7 +24,7 @@ ACodeStructureGameMode::ACodeStructureGameMode()
 	}
 }
 
-void ACodeStructureGameMode::QuickSoulInPlayer()
+void ACodeStructureGameMode::QuickToSoulInPlayer()
 {
 	ACSCharacterSelectSoul* Soul = CastChecked<ACSCharacterSelectSoul>(UGameplayStatics::GetActorOfClass(GetWorld(), ACSCharacterSelectSoul::StaticClass()));
 	if (Soul)

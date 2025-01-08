@@ -9,12 +9,14 @@
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 
+TObjectPtr<UWarriorAnimMontageDataAsset> UCSDefaultAttackComponent::WarriorAnimMontageDataAsset;
+TObjectPtr<UWraithAnimMontageDataAsset> UCSDefaultAttackComponent::WraithAnimMontageDataAsset;
+
 UCSDefaultAttackComponent::UCSDefaultAttackComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 
 }
-
 
 void UCSDefaultAttackComponent::BeginPlay()
 {
@@ -31,7 +33,6 @@ void UCSDefaultAttackComponent::BeginPlay()
 		GameInstance->OnWraithDataAsyncLoad.BindUObject(this, &UCSDefaultAttackComponent::SetWraithAnimMontageDataAsset);
 	}
 }
-
 
 void UCSDefaultAttackComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -61,6 +62,24 @@ void UCSDefaultAttackComponent::LoadAssetAsync(const EAssetType& AssetType)
 		else if (AssetType == EAssetType::Wraith)
 		{
 			GameInstance->WraithAsyncLoad();
+		}
+	}
+}
+
+void UCSDefaultAttackComponent::UnLoadAsset(const EAssetType& AssetType)
+{
+	UCSGameInstance* GameInstance = Cast<UCSGameInstance>(GetWorld()->GetGameInstance());
+	if (GameInstance)
+	{
+		if (AssetType == EAssetType::Warrior)
+		{
+			WarriorAnimMontageDataAsset = nullptr;
+			GameInstance->UnloadWarriorAsset();
+		}
+		else if (AssetType == EAssetType::Wraith)
+		{
+			WraithAnimMontageDataAsset = nullptr;
+			GameInstance->UnloadWraithAsset();
 		}
 	}
 }

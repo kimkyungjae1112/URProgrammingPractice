@@ -29,7 +29,19 @@ void UCSGameInstance::WarriorAsyncLoad()
 void UCSGameInstance::WraithAsyncLoad()
 {
 	const FString WraithSoftObjectPath = FString::Printf(TEXT("%s.%s"), *WraithPackageName, *WraithAnimMontageAssetName);
-	WraithHandle = WraithStreamableManager.RequestAsyncLoad(WraithSoftObjectPath, FStreamableDelegate::CreateUObject(this, &UCSGameInstance::WraithDataLoad));
+	Handle = StreamableManager.RequestAsyncLoad(WraithSoftObjectPath, FStreamableDelegate::CreateUObject(this, &UCSGameInstance::WraithDataLoad));
+}
+
+void UCSGameInstance::UnloadWarriorAsset()
+{
+	const FString WarriorSoftObjectPath = FString::Printf(TEXT("%s.%s"), *WarriorPackageName, *WarriorAnimMontageAssetName);
+	StreamableManager.Unload(WarriorSoftObjectPath);
+}
+
+void UCSGameInstance::UnloadWraithAsset()
+{
+	const FString WraithSoftObjectPath = FString::Printf(TEXT("%s.%s"), *WraithPackageName, *WraithAnimMontageAssetName);
+	StreamableManager.Unload(WraithSoftObjectPath);
 }
 
 void UCSGameInstance::WarriorDataLoad()
@@ -45,11 +57,11 @@ void UCSGameInstance::WarriorDataLoad()
 
 void UCSGameInstance::WraithDataLoad()
 {
-	if (WraithHandle.IsValid() && WraithHandle->HasLoadCompleted())
+	if (Handle.IsValid() && Handle->HasLoadCompleted())
 	{
-		OnWraithDataAsyncLoad.ExecuteIfBound(Cast<UWraithAnimMontageDataAsset>(WraithHandle->GetLoadedAsset()));
+		OnWraithDataAsyncLoad.ExecuteIfBound(Cast<UWraithAnimMontageDataAsset>(Handle->GetLoadedAsset()));
 	}
 
-	WraithHandle->ReleaseHandle();
-	WraithHandle.Reset();
+	Handle->ReleaseHandle();
+	Handle.Reset();
 }

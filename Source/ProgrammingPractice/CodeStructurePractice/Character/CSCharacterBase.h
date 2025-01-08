@@ -75,7 +75,7 @@ protected:
 private:
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void QuickSoul();
+	void QuickToSoul();
 
 	UPROPERTY(VisibleAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> IMC_Default;

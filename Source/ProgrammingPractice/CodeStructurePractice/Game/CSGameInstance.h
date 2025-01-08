@@ -32,6 +32,9 @@ public:
 	void WarriorAsyncLoad();
 	void WraithAsyncLoad();
 
+	void UnloadWarriorAsset();
+	void UnloadWraithAsset();
+
 private:
 	void WarriorDataLoad();
 	void WraithDataLoad();
@@ -43,7 +46,4 @@ private:
 
 	FStreamableManager StreamableManager;
 	TSharedPtr<FStreamableHandle> Handle;
-
-	FStreamableManager WraithStreamableManager;
-	TSharedPtr<FStreamableHandle> WraithHandle;
 };

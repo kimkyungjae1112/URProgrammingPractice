@@ -43,6 +43,7 @@ public:
 /* Asyncload */
 public:
 	void LoadAssetAsync(const EAssetType& AssetType);
+	void UnLoadAsset(const EAssetType& AssetType);
 
 /* Utility */
 private:
@@ -54,13 +55,9 @@ private:
 
 /* Asset Data */
 private:
+	static TObjectPtr<UWarriorAnimMontageDataAsset> WarriorAnimMontageDataAsset;
+	static TObjectPtr<UWraithAnimMontageDataAsset> WraithAnimMontageDataAsset;
+
 	void SetWarriorAnimMontageDataAsset(UWarriorAnimMontageDataAsset* InWarriorAnimMontageDataAsset);
 	void SetWraithAnimMontageDataAsset(UWraithAnimMontageDataAsset* InWraithAnimMontageDataAsset);
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UWarriorAnimMontageDataAsset> WarriorAnimMontageDataAsset;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UWraithAnimMontageDataAsset> WraithAnimMontageDataAsset;
-
 };
