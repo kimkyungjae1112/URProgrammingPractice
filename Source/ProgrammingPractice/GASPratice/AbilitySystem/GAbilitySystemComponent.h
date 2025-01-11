@@ -13,5 +13,8 @@ UCLASS()
 class PROGRAMMINGPRACTICE_API UGAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+
+public:
+	UGAbilitySystemComponent();
 	
 };
