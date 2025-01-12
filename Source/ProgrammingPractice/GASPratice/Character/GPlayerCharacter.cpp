@@ -57,6 +57,7 @@ void AGPlayerCharacter::PossessedBy(AController* NewController)
 
 	//Ability System을 초기화 하기 위함?
 	InitAbilitySystemComponent();
+	GiveDefaultAbilities();
 }
 
 // 클라이언트에서 PlayerState가 리플레케이션으로 갱신되었을 때, 혹은 처음으로 설정되었을 때 호출됨.
