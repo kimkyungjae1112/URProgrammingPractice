@@ -4,6 +4,7 @@
 #include "CodeStructurePractice/Character/CSCharacterBase.h"
 #include "CodeStructurePractice/Game/CodeStructureGameMode.h"
 #include "CodeStructurePractice/Component/CSDefaultAttackComponent.h"
+#include "CodeStructurePractice/Data/CSInputDataAsset.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/BoxComponent.h"
 #include "Camera/CameraComponent.h"
@@ -39,36 +40,12 @@ ACSCharacterBase::ACSCharacterBase()
 
 	DefaultAttackComp = CREATE_COMP(UCSDefaultAttackComponent, Default Attack Comp);
 
-	static ConstructorHelpers::FObjectFinder<UInputMappingContext> IMC_Ref(TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Input/Character/IMC_Character.IMC_Character'"));
-	if (IMC_Ref.Object)
+	static ConstructorHelpers::FObjectFinder<UCSInputDataAsset> InputDataRef(TEXT("/Script/ProgrammingPractice.CSInputDataAsset'/Game/CS/Data/DA_Input.DA_Input'"));
+	if (InputDataRef.Object)
 	{
-		IMC_Default = IMC_Ref.Object;
+		InputData = InputDataRef.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> MoveActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Character/IMC_CharacterMove.IMC_CharacterMove'"));
-	if (MoveActionRef.Object)
-	{
-		MoveAction = MoveActionRef.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> LookActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Character/IMC_CharacterLook.IMC_CharacterLook'"));
-	if (LookActionRef.Object)
-	{
-		LookAction = LookActionRef.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> JumpActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Character/IMC_CharacterJump.IMC_CharacterJump'"));
-	if (JumpActionRef.Object)
-	{
-		JumpAction = JumpActionRef.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> QuickSoulActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Character/IMC_CharacterChange.IMC_CharacterChange'"));
-	if (QuickSoulActionRef.Object)
-	{
-		QuickSoulAction = QuickSoulActionRef.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UInputAction> DefaultAttackActionRef(TEXT("/Script/EnhancedInput.InputAction'/Game/Input/Character/IMC_CharacterDefaultAttack.IMC_CharacterDefaultAttack'"));
-	if (DefaultAttackActionRef.Object)
-	{
-		DefaultAttackAction = DefaultAttackActionRef.Object;
-	}
+	
 }
 
 void ACSCharacterBase::BeginPlay()
@@ -89,12 +66,12 @@ void ACSCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent);
 
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACSCharacterBase::Move);
-	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACSCharacterBase::Look);
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-	EnhancedInputComponent->BindAction(QuickSoulAction, ETriggerEvent::Started, this, &ACSCharacterBase::QuickToSoul);
-	EnhancedInputComponent->BindAction(DefaultAttackAction, ETriggerEvent::Started, this, &ACSCharacterBase::DefaultAttack);
+	EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Triggered, this, &ACSCharacterBase::Move);
+	EnhancedInputComponent->BindAction(InputData->LookAction, ETriggerEvent::Triggered, this, &ACSCharacterBase::Look);
+	EnhancedInputComponent->BindAction(InputData->JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+	EnhancedInputComponent->BindAction(InputData->JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	EnhancedInputComponent->BindAction(InputData->QuickSoulAction, ETriggerEvent::Started, this, &ACSCharacterBase::QuickToSoul);
+	EnhancedInputComponent->BindAction(InputData->DefaultAttackAction, ETriggerEvent::Started, this, &ACSCharacterBase::DefaultAttack);
 }
 
 UClass* ACSCharacterBase::GetCharacterClass()
@@ -112,7 +89,7 @@ void ACSCharacterBase::RegisterInputSystem()
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetMyController()->GetLocalPlayer()))
 	{
 		Subsystem->ClearAllMappings();
-		Subsystem->AddMappingContext(IMC_Default, 0);
+		Subsystem->AddMappingContext(InputData->IMC_Default, 0);
 	}
 }
 
@@ -142,6 +119,22 @@ APlayerController* ACSCharacterBase::GetMyController()
 void ACSCharacterBase::DefaultAttack()
 {
 	UE_LOG(LogTemp, Display, TEXT("Parent Default Attack"));
+}
+
+void ACSCharacterBase::Run()
+{
+}
+
+void ACSCharacterBase::Walk()
+{
+}
+
+void ACSCharacterBase::Jump()
+{
+}
+
+void ACSCharacterBase::EquipWeapon()
+{
 }
 
 void ACSCharacterBase::Move(const FInputActionValue& Value)

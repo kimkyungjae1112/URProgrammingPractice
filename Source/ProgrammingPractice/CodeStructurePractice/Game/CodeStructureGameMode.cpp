@@ -17,7 +17,7 @@ ACodeStructureGameMode::ACodeStructureGameMode()
 		PlayerControllerClass = PlayerControllerClassRef.Class;
 	}
 
-	static ConstructorHelpers::FClassFinder<APawn> DefaultPawnClassRef(TEXT("/Game/Blueprints/BP_CSCharacterSelectSoul.BP_CSCharacterSelectSoul_C"));
+	static ConstructorHelpers::FClassFinder<APawn> DefaultPawnClassRef(TEXT("/Game/CS/Blueprints/BP_CSCharacterSelectSoul.BP_CSCharacterSelectSoul_C"));
 	if (DefaultPawnClassRef.Class)
 	{
 		DefaultPawnClass = DefaultPawnClassRef.Class;

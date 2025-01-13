@@ -16,6 +16,7 @@ class UInputMappingContext;
 class UInputAction;
 class APlayerController;
 class UCSDefaultAttackComponent;
+class UCSInputDataAsset;
 
 UENUM()
 enum class EPlayerClass : uint8
@@ -71,6 +72,9 @@ private:
 /* Input */
 protected:
 	virtual void DefaultAttack();
+	virtual void Run();
+	virtual void Jump();
+	virtual void EquipWeapon();
 
 private:
 	void Move(const FInputActionValue& Value);
@@ -78,20 +82,5 @@ private:
 	void QuickToSoul();
 
 	UPROPERTY(VisibleAnywhere, Category = "Input")
-	TObjectPtr<UInputMappingContext> IMC_Default;
-
-	UPROPERTY(VisibleAnywhere, Category = "Input")
-	TObjectPtr<UInputAction> MoveAction;
-	
-	UPROPERTY(VisibleAnywhere, Category = "Input")
-	TObjectPtr<UInputAction> LookAction;
-
-	UPROPERTY(VisibleAnywhere, Category = "Input")
-	TObjectPtr<UInputAction> JumpAction;
-
-	UPROPERTY(VisibleAnywhere, Category = "Input")
-	TObjectPtr<UInputAction> QuickSoulAction;
-
-	UPROPERTY(VisibleAnywhere, Category = "Input")
-	TObjectPtr<UInputAction> DefaultAttackAction;
+	TObjectPtr<UCSInputDataAsset> InputData;
 };

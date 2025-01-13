@@ -70,7 +70,7 @@ void AGPlayerCharacter::OnRep_PlayerState()
 
 	//Ability System을 초기화 하기 위함?
 	InitAbilitySystemComponent();
-	GiveDefaultAbilities();
+	GiveDefaultAbilities(); // 클라이언트에서만 GiveAbility를 호출하면 안됨
 }
 
 void AGPlayerCharacter::BeginPlay()

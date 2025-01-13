@@ -5,8 +5,8 @@
 #include "CodeStructurePractice/Data/WarriorAnimMontageDataAsset.h"
 #include "CodeStructurePractice/Data/WraithAnimMontageDataAsset.h"
 
-const FString UCSGameInstance::WarriorPackageName = TEXT("/Game/Data/DA_WarriorAnimMontage");
-const FString UCSGameInstance::WraithPackageName = TEXT("/Game/Data/DA_WraithAnimMontage");
+const FString UCSGameInstance::WarriorPackageName = TEXT("/Game/CS/Data/DA_WarriorAnimMontage");
+const FString UCSGameInstance::WraithPackageName = TEXT("/Game/CS/Data/DA_WraithAnimMontage");
 const FString UCSGameInstance::WarriorAnimMontageAssetName = TEXT("DA_WarriorAnimMontage");
 const FString UCSGameInstance::WraithAnimMontageAssetName = TEXT("DA_WraithAnimMontage");
 
